@@ -25,7 +25,7 @@ print()
 gemini_api_key = os.environ.get("GEMINI_API_KEY")
 if not gemini_api_key:
     # Fallback para desarrollo/testing - reemplaza con tu propia API key
-    gemini_api_key = "AIzaSyCMfQYB9D5V1V3_UkJwbuHnXggJkTnBsx0"
+    gemini_api_key = "ACÁ COPIA Y PEGA TU KEY"
     print("⚠️  Usando API key de ejemplo - reemplázala con tu propia key")
 else:
     print("✅ API key cargada desde variable de entorno GEMINI_API_KEY")
