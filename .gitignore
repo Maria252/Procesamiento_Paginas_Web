@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment files
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Data files que pueden contener información sensible
+data/htmls/*.html
+data/processed/*.csv
+data/htmls/checkpoint.json
+data/htmls/gpt_cache.json
+data/htmls/blocked_sites.json
+data/htmls/processing.log
+
+# API Keys (nunca commitear)
+*.key
+api_keys.txt
+config_local.py
+
+# System files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Playwright
+playwright-report/
+test-results/

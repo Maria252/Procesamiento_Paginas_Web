@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Instalar dependencias del sistema necesarias para Playwright
+apt-get update
+apt-get install -y wget gnupg
+
+# Instalar Playwright browsers después de que se instalen las dependencias de Python
+python -m playwright install chromium
+python -m playwright install-deps chromium
+
+# Asegurar permisos correctos para los archivos de configuración
+chmod +x /home/jovyan/work/notebooks/*.py
+
+# Crear directorios necesarios si no existen
+mkdir -p /home/jovyan/work/data/htmls
+mkdir -p /home/jovyan/work/data/processed
