@@ -1,47 +1,19 @@
 #!/bin/bash
 
-# Actualizar lista de paquetes
-sudo apt-get update
-
-# Instalar dependencias del sistema necesarias para Playwright
-sudo apt-get install -y \
-    libnspr4 \
-    libnss3 \
-    libdbus-1-3 \
-    libatk1.0-0 \
-    libatk-bridge2.0-0 \
-    libatspi2.0-0 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxfixes3 \
-    libxrandr2 \
-    libgbm1 \
-    libxkbcommon0 \
-    libasound2 \
-    libxss1 \
-    libgconf-2-4 \
-    libxtst6 \
-    libxrandr2 \
-    libasound2 \
-    libpangocairo-1.0-0 \
-    libatk1.0-0 \
-    libcairo1 \
-    libgdk-pixbuf2.0-0 \
-    libgtk-3-0 \
-    libglib2.0-0
-
-# Instalar herramientas adicionales necesarias
-sudo apt-get install -y wget gnupg
-
-# Instalar Playwright browsers y dependencias
+# Instalar Playwright browsers y dependencias (esto también instala las dependencias del sistema)
+echo "🔧 Instalando navegadores de Playwright..."
 python -m playwright install chromium
+
+echo "🔧 Instalando dependencias del sistema de Playwright..."
 python -m playwright install-deps chromium
 
-# Asegurar permisos correctos para los archivos de configuración
-chmod +x /home/jovyan/work/notebooks/*.py
-
 # Crear directorios necesarios si no existen
+echo "📁 Creando directorios necesarios..."
 mkdir -p /home/jovyan/work/data/htmls
 mkdir -p /home/jovyan/work/data/processed
 
-echo "✅ Playwright y dependencias instaladas correctamente"
+# Asegurar permisos correctos
+echo "🔐 Configurando permisos..."
+chmod +x /home/jovyan/work/notebooks/*.py 2>/dev/null || true
+
+echo "✅ Configuración de Playwright completada"

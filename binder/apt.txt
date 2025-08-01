@@ -12,12 +12,6 @@ libgbm1
 libxkbcommon0
 libasound2
 libxss1
-libgconf-2-4
 libxtst6
-libpangocairo-1.0-0
-libcairo1
-libgdk-pixbuf2.0-0
-libgtk-3-0
-libglib2.0-0
 wget
 gnupg
