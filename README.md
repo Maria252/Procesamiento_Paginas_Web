@@ -20,13 +20,16 @@ Este repositorio contiene un sistema automatizado de extracción de información
 ### Opción 1: MyBinder (Recomendado)
 
 1. Haz clic en el botón **"launch binder"** arriba
-2. Espera a que se construya el entorno (2-3 minutos)
+2. Espera a que se construya el entorno (3-5 minutos la primera vez)
 3. Abre una terminal y ejecuta:
    ```bash
    cd notebooks
-   python check_setup.py  # Verificar instalación
-   python 0_html_processing.py  # Ejecutar procesamiento
+   python test_playwright.py    # Verificar Playwright
+   python check_setup.py       # Verificar instalación completa
+   python 0_html_processing.py # Ejecutar procesamiento
    ```
+
+**Nota**: La primera construcción en MyBinder puede tomar más tiempo debido a la instalación de dependencias de Playwright.
 
 ### Opción 2: Instalación Local
 
@@ -208,7 +211,36 @@ Los logs se muestran en tiempo real durante la ejecución e incluyen:
 4. Push a la rama
 5. Abre un Pull Request
 
-## 📄 Licencia
+## � Troubleshooting
+
+### Problemas con Playwright en MyBinder
+
+Si encuentras errores relacionados con "Host system is missing dependencies":
+
+1. **Espera a que la construcción termine completamente** - MyBinder instala automáticamente las dependencias
+2. **Ejecuta el test de verificación**:
+   ```bash
+   cd notebooks
+   python test_playwright.py
+   ```
+3. **Si el problema persiste**, es probable que MyBinder esté teniendo problemas temporales
+
+### Errores Comunes
+
+- **"No such file or directory"**: Asegúrate de estar en el directorio `notebooks`
+- **"API key invalid"**: Configura tu propia API key de Gemini
+- **"Browser launch failed"**: Ejecuta `python test_playwright.py` para diagnosticar
+
+### 📞 Soporte
+
+Si encuentras problemas:
+
+1. Revisa los logs en `../data/htmls/processing.log`
+2. Verifica tu conectividad a Internet
+3. Confirma que tu API key de Gemini sea válida
+4. Usa `--clear-blocked` si muchos sitios están bloqueados
+
+## �📄 Licencia
 
 Este proyecto está bajo la Licencia MIT - ver el archivo LICENSE para detalles.
 
