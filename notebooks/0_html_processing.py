@@ -32,10 +32,14 @@ else:
 
 genai.configure(api_key=gemini_api_key)
 
-INPUT_CSV = os.environ.get("COMPANY_XLSX", 'data/companies_demo.xlsx')
-HTML_DIR = os.environ.get("COMPANY_HTML", 'data/htmls')
+# Configurar rutas dinámicamente para funcionar tanto en local como en Binder
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(script_dir)  # Un nivel arriba del directorio notebooks
+
+INPUT_CSV = os.environ.get("COMPANY_XLSX", os.path.join(project_root, 'data', 'companies_demo.xlsx'))
+HTML_DIR = os.environ.get("COMPANY_HTML", os.path.join(project_root, 'data', 'htmls'))
 OUTPUT_DIR = HTML_DIR
-OUTPUT_FILE = os.environ.get("COMPANY_OUT", 'data/processed/company_info_V5.csv')
+OUTPUT_FILE = os.environ.get("COMPANY_OUT", os.path.join(project_root, 'data', 'processed', 'company_info_V5.csv'))
 CHECKPOINT_FILE = os.path.join(OUTPUT_DIR, "checkpoint.json")
 CACHE_FILE = os.path.join(OUTPUT_DIR, "gpt_cache.json")
 BLOCKED_SITES_FILE = os.path.join(OUTPUT_DIR, "blocked_sites.json")
@@ -45,7 +49,12 @@ MAX_CONCURRENT_COMPANIES = int(os.environ.get("MAX_CONCURRENT", "5"))
 GPT_RATE_LIMIT_DELAY = float(os.environ.get("GPT_DELAY", "1.0"))
 URL_VALIDATION_TIMEOUT = int(os.environ.get("URL_TIMEOUT", "10"))
 
-# Setup logging
+# Crea las carpetas si no existen ANTES de configurar el logging
+for path in [HTML_DIR, OUTPUT_DIR, os.path.dirname(OUTPUT_FILE)]:
+    if path and not os.path.exists(path):
+        os.makedirs(path, exist_ok=True)
+
+# Setup logging (después de crear directorios)
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -55,11 +64,6 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
-
-# Crea las carpetas si no existen
-for path in [HTML_DIR, OUTPUT_DIR, os.path.dirname(OUTPUT_FILE)]:
-    if path and not os.path.exists(path):
-        os.makedirs(path, exist_ok=True)
 
 KEYWORDS = [
     # CONTACTO Y GENERAL

@@ -62,10 +62,14 @@ def check_data_files():
     print("📁 Verificando archivos de datos...")
     import os
     
+    # Obtener rutas dinámicamente
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(script_dir)
+    
     files_to_check = [
-        ("../data/companies_demo.xlsx", "Archivo de empresas demo"),
-        ("../data/htmls/", "Directorio de HTMLs"),
-        ("../data/processed/", "Directorio de resultados")
+        (os.path.join(project_root, "data", "companies_demo.xlsx"), "Archivo de empresas demo"),
+        (os.path.join(project_root, "data", "htmls"), "Directorio de HTMLs"),
+        (os.path.join(project_root, "data", "processed"), "Directorio de resultados")
     ]
     
     all_good = True
@@ -74,7 +78,16 @@ def check_data_files():
             print(f"   ✅ {description} - OK")
         else:
             print(f"   ❌ {description} - No encontrado: {file_path}")
-            all_good = False
+            # Intentar crear directorios si no existen
+            if "Directorio" in description:
+                try:
+                    os.makedirs(file_path, exist_ok=True)
+                    print(f"   ✅ {description} - Creado automáticamente")
+                except Exception as e:
+                    print(f"   ❌ Error creando directorio: {e}")
+                    all_good = False
+            else:
+                all_good = False
     
     return all_good
 
@@ -116,14 +129,14 @@ def main():
         print("🎉 ¡Todo listo! El entorno está configurado correctamente.")
         print("\n📝 Próximos pasos:")
         print("   1. Obtén tu API key de Google Gemini: https://makersuite.google.com/app/apikey")
-        print("   2. Ejecuta el notebook: captacion_info_empresas.ipynb")
-        print("   3. O ejecuta directamente: python 0_html_processing.py")
+        print("   2. Configura la variable de entorno: export GEMINI_API_KEY='tu-api-key'")
+        print("   3. Ejecuta el script: python 0_html_processing.py")
     else:
         print("❌ Hay problemas con la configuración.")
         print("\n🔧 Para solucionarlos:")
         print("   1. Instala las dependencias: pip install -r ../binder/requirements.txt")
         print("   2. Instala navegadores: python -m playwright install chromium")
-        print("   3. Verifica que los archivos de datos estén en su lugar")
+        print("   3. Los directorios de datos se crean automáticamente")
     
     return all(checks)
 
