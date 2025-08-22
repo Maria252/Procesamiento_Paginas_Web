@@ -362,7 +362,7 @@ def find_internal_links(html, base_url, keywords=KEYWORDS, max_links=8):
     return found
 
 async def get_rendered_html_async(url, timeout=20000, max_retries=3):
-    """Obtener HTML renderizado con mejor manejo de contenido dinámico"""
+    """Obtener HTML renderizado con mejor manejo de contenido dinámico y reintentos mejorados"""
     for attempt in range(max_retries):
         try:
             async with async_playwright() as p:
@@ -383,33 +383,14 @@ async def get_rendered_html_async(url, timeout=20000, max_retries=3):
                 # Esperar a que se cargue el contenido dinámico
                 await page.wait_for_timeout(5000)
                 
-                # Intentar hacer scroll para activar lazy loading
+                # Scroll optimizado para activar lazy loading
                 try:
-                    await page.evaluate("""
-                        async () => {
-                            await new Promise((resolve) => {
-                                let totalHeight = 0;
-                                const distance = 100;
-                                const timer = setInterval(() => {
-                                    const scrollHeight = document.body.scrollHeight;
-                                    window.scrollBy(0, distance);
-                                    totalHeight += distance;
-                                    
-                                    if(totalHeight >= scrollHeight){
-                                        clearInterval(timer);
-                                        resolve();
-                                    }
-                                }, 100);
-                            });
-                        }
-                    """)
-                    await page.wait_for_timeout(2000)
+                    await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                    await page.wait_for_timeout(1000)
+                    await page.evaluate("window.scrollTo(0, 0)")
+                    await page.wait_for_timeout(500)
                 except:
                     pass  # Si falla el scroll, continuar
-                
-                # Volver al inicio de la página
-                await page.evaluate("window.scrollTo(0, 0)")
-                await page.wait_for_timeout(1000)
                 
                 # Obtener el HTML final renderizado
                 html = await page.content()
@@ -421,7 +402,7 @@ async def get_rendered_html_async(url, timeout=20000, max_retries=3):
         except Exception as e:
             logger.error(f"Error intento {attempt+1} para {url}: {e}")
             if attempt < max_retries - 1:
-                await asyncio.sleep(3 * (attempt + 1))
+                await asyncio.sleep(3 * (attempt + 1))  # Espera progresiva
     
     logger.error(f"No se pudo obtener HTML después de {max_retries} intentos para {url}")
     return None
@@ -538,14 +519,15 @@ def save_blocked_sites(blocked_sites):
         logger.error(f"Error guardando sitios bloqueados: {e}")
 
 async def validate_url(url, use_fallback=True):
-    """Validar si una URL es accesible antes del procesamiento con múltiples métodos"""
+    """Validar si una URL es accesible antes del procesamiento con múltiples métodos mejorados"""
     try:
-        # Primer intento: HEAD request
+        # Primer intento: HEAD request (más rápido)
         timeout = aiohttp.ClientTimeout(total=URL_VALIDATION_TIMEOUT)
         async with aiohttp.ClientSession(timeout=timeout) as session:
             try:
                 async with session.head(url) as response:
                     if response.status < 400:
+                        logger.debug(f"URL válida (HEAD): {url}")
                         return True
             except:
                 pass  # Si HEAD falla, intentar GET
@@ -554,14 +536,21 @@ async def validate_url(url, use_fallback=True):
             if use_fallback:
                 try:
                     async with session.get(url) as response:
-                        return response.status < 400
-                except:
+                        status_valid = response.status < 400
+                        if status_valid:
+                            logger.debug(f"URL válida (GET): {url}")
+                        else:
+                            logger.debug(f"URL inválida (status {response.status}): {url}")
+                        return status_valid
+                except Exception as get_error:
+                    logger.debug(f"GET request falló para {url}: {get_error}")
                     pass
         
+        logger.warning(f"URL no accesible después de ambos métodos: {url}")
         return False
         
     except Exception as e:
-        logger.warning(f"URL no accesible {url}: {e}")
+        logger.warning(f"Error validando URL {url}: {e}")
         return False
 
 def review_blocked_sites(blocked_sites, df):
@@ -598,9 +587,19 @@ def clear_blocked_sites_file():
             os.remove(BLOCKED_SITES_FILE)
             logger.info("Archivo de sitios bloqueados eliminado")
         else:
-            logger.info("No existe archivo de sitios bloqueados")
+            logger.info("No existe archivo de sitios bloqueados para eliminar")
     except Exception as e:
         logger.error(f"Error eliminando archivo de sitios bloqueados: {e}")
+
+def has_html_files_downloaded(company_name, html_dir):
+    """Verificar si una empresa tiene archivos HTML ya descargados"""
+    prefix = safe_filename(company_name)
+    try:
+        html_files = [f for f in os.listdir(html_dir) if f.startswith(prefix) and f.endswith('.html')]
+        return len(html_files) > 0
+    except Exception as e:
+        logger.warning(f"Error verificando HTMLs para {company_name}: {e}")
+        return False
 
 def normalize_gpt_response(data):
     """This function is deprecated and will be removed. Use normalize_response instead."""
@@ -609,7 +608,7 @@ def normalize_gpt_response(data):
     return normalize_response(data)
 
 async def process_single_company(idx, row, total, blocked_sites, gpt_cache):
-    """Procesar una sola empresa de manera asíncrona"""
+    """Procesar una sola empresa de manera asíncrona con validación mejorada"""
     company = row.get('Company Name', f"empresa_{idx}")
     url = str(row.get("Website", "")).strip()
     
@@ -617,7 +616,9 @@ async def process_single_company(idx, row, total, blocked_sites, gpt_cache):
         logger.warning(f"[{idx+1}/{total}] {company}: URL vacía, saltando")
         return None
     
-    # Normalizar URL
+    # Usar URL original sin normalizar para mejor compatibilidad
+    original_url = url
+    # Normalizar URL para comparaciones
     url = normalize_url(url)
     
     # Verificar si está en sitios bloqueados
@@ -625,27 +626,27 @@ async def process_single_company(idx, row, total, blocked_sites, gpt_cache):
         logger.warning(f"[{idx+1}/{total}] {company}: Sitio previamente bloqueado, saltando")
         return None
     
-    # Validar URL antes de procesar (validación menos estricta)
-    if not await validate_url(url, use_fallback=True):
-        logger.warning(f"[{idx+1}/{total}] {company}: URL no accesible después de validación completa, agregando a sitios bloqueados")
+    # Validar URL antes de procesar (validación mejorada con URL original)
+    if not await validate_url(original_url, use_fallback=True):
+        logger.warning(f"[{idx+1}/{total}] {company}: URL no accesible, agregando a sitios bloqueados")
         blocked_sites.add(url)
         return None
     
-    prefix = safe_filename(company)
-    already_extracted = any(fname.startswith(prefix) and fname.endswith(".html") for fname in os.listdir(HTML_DIR))
+    # Verificar si ya tiene archivos HTML descargados (usando función mejorada)
+    already_extracted = has_html_files_downloaded(company, HTML_DIR)
     
     # Descargar HTMLs solo si no existen
     if not already_extracted:
-        logger.info(f"[{idx+1}/{total}] Descargando HTMLs de {company}: {url}")
+        logger.info(f"[{idx+1}/{total}] Descargando HTMLs de {company}: {original_url}")
         
         try:
-            html_home = await get_rendered_html_async(url)
+            html_home = await get_rendered_html_async(original_url)
             if html_home:
                 home_filename = safe_filename(company, "home") + ".html"
                 with open(os.path.join(OUTPUT_DIR, home_filename), "w", encoding="utf-8") as f:
                     f.write(html_home)
                 
-                links = find_internal_links(html_home, url)
+                links = find_internal_links(html_home, original_url)
                 if links:
                     logger.info(f"    Secciones relevantes encontradas: {len(links)}")
                     await download_sections(links, company, OUTPUT_DIR, timeout=20000)
@@ -729,17 +730,19 @@ async def main():
             logger.warning("Si quieres reintentar sitios bloqueados, puedes limpiar el archivo:")
             logger.warning(f"rm {BLOCKED_SITES_FILE}")
     
-    # Filtrar empresas que necesitan procesamiento
+    # Filtrar empresas que necesitan procesamiento con lógica mejorada
     companies_to_process = []
     companies_with_html = 0
     companies_already_processed = 0
     companies_blocked = 0
+    companies_no_url = 0
     
     for idx, row in df.iterrows():
         url = str(row.get("Website", "")).strip()
         company_name = row.get('Company Name', f"empresa_{idx}")
         
         if not url:
+            companies_no_url += 1
             continue
             
         normalized_url = normalize_url(url)
@@ -749,9 +752,8 @@ async def main():
             companies_blocked += 1
             continue
         
-        # Verificar si tiene archivos HTML descargados
-        prefix = safe_filename(company_name)
-        has_html_files = any(fname.startswith(prefix) and fname.endswith(".html") for fname in os.listdir(HTML_DIR))
+        # Verificar si tiene archivos HTML descargados (usando función mejorada)
+        has_html_files = has_html_files_downloaded(company_name, HTML_DIR)
         
         if has_html_files:
             companies_with_html += 1
@@ -762,17 +764,22 @@ async def main():
         
         # Procesar si:
         # 1. No tiene HTMLs descargados, O
-        # 2. Tiene HTMLs pero no está en processed (para extraer datos con GPT)
+        # 2. Tiene HTMLs pero no está en processed (para extraer datos con IA)
         companies_to_process.append((idx, row))
     
+    # Estadísticas mejoradas del procesamiento
+    logger.info("=" * 60)
+    logger.info("ESTADÍSTICAS DE PROCESAMIENTO")
     logger.info(f"Total empresas: {total}")
+    logger.info(f"Empresas sin URL: {companies_no_url}")
     logger.info(f"Empresas con HTMLs existentes: {companies_with_html}")
     logger.info(f"Empresas completamente procesadas: {companies_already_processed}")
     logger.info(f"Empresas bloqueadas: {companies_blocked}")
-    logger.info(f"Empresas por procesar: {len(companies_to_process)}")
+    logger.info(f"Empresas pendientes de procesar: {len(companies_to_process)}")
+    logger.info("=" * 60)
     
     if not companies_to_process:
-        logger.info("No hay empresas nuevas para procesar")
+        logger.info("✅ No hay empresas nuevas para procesar - todos los datos están actualizados")
         return
     
     # Procesar en lotes para control de concurrencia
@@ -827,18 +834,27 @@ async def main():
         if i + batch_size < len(companies_to_process):
             await asyncio.sleep(2)
     
-    # Estadísticas finales
+    # Estadísticas finales mejoradas
     end_time = datetime.now()
     duration = end_time - start_time
     
-    logger.info("=" * 50)
-    logger.info("ESTADÍSTICAS FINALES")
-    logger.info(f"Tiempo total: {duration}")
-    logger.info(f"Empresas procesadas exitosamente: {successful_count}")
-    logger.info(f"Empresas fallidas: {failed_count}")
-    logger.info(f"Sitios bloqueados total: {len(blocked_sites)}")
-    logger.info(f"Entradas en caché GPT: {len(gpt_cache)}")
-    logger.info("¡Extracción finalizada!")
+    # Calcular tasas de éxito
+    total_attempted = successful_count + failed_count
+    success_rate = (successful_count / total_attempted * 100) if total_attempted > 0 else 0
+    
+    logger.info("=" * 60)
+    logger.info("🎉 ESTADÍSTICAS FINALES DEL PROCESAMIENTO")
+    logger.info("=" * 60)
+    logger.info(f"⏱️  Tiempo total: {duration}")
+    logger.info(f"📊 Empresas procesadas exitosamente: {successful_count}")
+    logger.info(f"❌ Empresas fallidas: {failed_count}")
+    logger.info(f"📈 Tasa de éxito: {success_rate:.1f}%")
+    logger.info(f"🚫 Sitios bloqueados total: {len(blocked_sites)}")
+    logger.info(f"💾 Entradas en caché IA: {len(gpt_cache)}")
+    logger.info(f"📁 Archivo de salida: {OUTPUT_FILE}")
+    logger.info("=" * 60)
+    logger.info("✅ ¡Extracción de datos empresariales finalizada exitosamente!")
+    logger.info("=" * 60)
 
 if __name__ == "__main__":
     import sys

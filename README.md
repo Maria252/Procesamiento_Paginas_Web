@@ -1,253 +1,239 @@
-# 🏢 Workshop: Extracción Automatizada de Información de Empresas
+# 🏢 Extractor Automático de Información de Empresas
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Maria252/Procesamiento_Paginas_Web/HEAD)
+[![Abrir en Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Maria252/Procesamiento_Paginas_Web/HEAD)
 
-## 📋 Descripción
+## 🤔 ¿Qué hace este programa?
 
-Este repositorio contiene un sistema automatizado de extracción de información empresarial que combina web scraping avanzado con análisis de IA utilizando **Playwright** y **Google Gemini**.
+Imagina que tienes una lista de 100 empresas y necesitas conocer información específica de cada una (ciudad donde están ubicadas, en qué sector trabajan, si tienen presencia en Latinoamérica, etc.). 
 
-### 🎯 Características Principales
+**En lugar de visitar manualmente cada página web y tomar notas**, este programa automatiza todo el proceso:
 
-- **Web scraping moderno** con Playwright para renderizado JavaScript
-- **Análisis con IA** usando Google Gemini para extracción de datos estructurados
-- **Procesamiento paralelo** optimizado para múltiples empresas
-- **Gestión de errores** y reintentos automáticos
-- **Sistema de caché** para evitar procesamientos duplicados
-- **Exportación a CSV** para análisis posterior
+1. **📋 Toma una lista** de empresas con sus páginas web (desde un archivo Excel)
+2. **🌐 Visita automáticamente** cada página web
+3. **🤖 Lee y entiende** el contenido usando Inteligencia Artificial
+4. **📊 Extrae la información** que necesitas de forma organizada
+5. **💾 Guarda todo** en un archivo que puedes abrir con Excel
 
-## 🚀 Inicio Rápido
+## 🎯 ¿Para qué sirve?
 
-### Opción 1: MyBinder (Recomendado)
+### ✅ Perfecto para:
+- **Investigación de mercado**: Conocer empresas competidoras
+- **Análisis sectorial**: Entender qué hacen las empresas de un sector
+- **Prospección comercial**: Obtener datos de contacto y ubicación
+- **Estudios académicos**: Recopilar información empresarial para investigaciones
+- **Due diligence**: Verificar información de empresas antes de hacer negocios
 
-1. Haz clic en el botón **"launch binder"** arriba
-2. Espera a que se construya el entorno (3-5 minutos la primera vez)
-3. Abre una terminal y ejecuta:
-   ```bash
-   cd notebooks
-   python test_playwright.py    # Verificar Playwright
-   python check_setup.py       # Verificar instalación completa
-   python 0_html_processing.py # Ejecutar procesamiento
-   ```
+### ❌ NO es recomendable para:
+- Obtener información confidencial o privada
+- Hacer muchas consultas simultáneas (puede saturar los servidores)
+- Usar sin permiso en sitios web que lo prohíban
 
-**Nota**: La primera construcción en MyBinder puede tomar más tiempo debido a la instalación de dependencias de Playwright.
+## 🚀 ¿Cómo usarlo? (Sin instalar nada)
 
-### Opción 2: Instalación Local
+### Opción 1: Usar en la nube (RECOMENDADO) 🌟
+
+**No necesitas instalar nada en tu computadora!**
+
+1. **Haz clic en el botón "launch binder"** ⬆️ (arriba)
+2. **Espera 3-5 minutos** mientras se prepara el entorno virtual
+3. **Cuando esté listo**, verás una pantalla como Jupyter
+4. **Abre la carpeta "notebooks"**
+5. **Ejecuta el archivo principal** `0_html_processing.py`
+
+### Opción 2: Si eres técnico y quieres instalarlo localmente
 
 ```bash
-# Clonar el repositorio
+# Descargar el código
 git clone https://github.com/Maria252/Procesamiento_Paginas_Web.git
 cd Procesamiento_Paginas_Web
 
-# Crear entorno virtual
-python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
-
-# Instalar dependencias
+# Instalar todo lo necesario
 pip install -r binder/requirements.txt
-
-# Instalar navegadores de Playwright
 python -m playwright install chromium
 
-# Verificar instalación
+# Ejecutar
 cd notebooks
-python check_setup.py
-
-# Ejecutar procesamiento
 python 0_html_processing.py
 ```
 
-## 📁 Estructura del Proyecto
+## 📁 ¿Qué archivos incluye?
 
 ```
-├── binder/
-│   ├── requirements.txt    # Dependencias Python
-│   ├── runtime.txt        # Versión de Python
-│   └── postBuild          # Script post-instalación
-├── notebooks/
-│   └── captacion_info_empresas.ipynb  # Notebook principal del taller
-├── data/
-│   ├── companies_demo.csv             # Datos de ejemplo
-│   ├── htmls/                         # HTMLs descargados
-│   └── processed/                     # Resultados procesados
-├── README.md
-└── 0_html_processing.py               # Código original de referencia
+📂 Tu proyecto
+├── 📂 data/                          # Aquí van los datos
+│   ├── 📄 companies_demo.xlsx        # Lista de empresas de ejemplo
+│   ├── 📂 htmls/                     # Páginas web descargadas
+│   └── 📂 processed/                 # Resultados finales
+├── 📂 notebooks/                     # El programa principal
+│   └── 📄 0_html_processing.py       # Archivo que hace toda la magia
+└── 📄 README.md                      # Este archivo que estás leyendo
 ```
 
-## 🛠️ Requisitos
+## 📊 ¿Qué información extrae?
 
-### Dependencias Principales
-- **Python 3.10+**
-- **Google AI API Key** (obtener en https://makersuite.google.com/app/apikey)
-- **Playwright** para web scraping
-- **Pandas** para manipulación de datos
-- **BeautifulSoup** para parsing HTML
+El programa busca y organiza esta información de cada empresa:
 
-### API Key de Google AI
+| Campo | Descripción | Ejemplo |
+|-------|-------------|---------|
+| **🏙️ Ciudad sede** | Dónde está ubicada la empresa | "Bogotá" |
+| **🌎 Estado/Región** | Región o departamento | "Cundinamarca" |
+| **📝 Descripción** | Qué hace la empresa (máximo 60 palabras) | "Empresa líder en servicios financieros..." |
+| **🏭 Sector** | A qué industria pertenece | "Servicios Financieros" |
+| **🌎 Presencia LATAM** | Si opera en otros países de Latinoamérica | "Sí - Colombia, Perú, México" |
+| **♻️ Sostenibilidad** | Si publica reportes ambientales | "Sí - Reporte anual 2024" |
+| **📞 Teléfonos** | Números de contacto | ["+57 1 234 5678"] |
+
+## 🛠️ ¿Qué necesitas para empezar?
+
+### Requisitos básicos:
+1. **📱 Conexión a internet** (para descargar las páginas web)
+2. **🔑 API Key de Google AI** (es gratis - te explico cómo conseguirla abajo)
+3. **📄 Lista de empresas** en formato Excel con estas columnas:
+   - `Company Name` (Nombre de la empresa)
+   - `Website` (Página web)
+
+### 🔑 Cómo conseguir tu API Key de Google AI (GRATIS):
+
+1. **Ve a** https://makersuite.google.com/app/apikey
+2. **Inicia sesión** con tu cuenta de Google
+3. **Haz clic en "Create API Key"**
+4. **Copia la clave** que te aparece
+5. **Pégala cuando el programa te la pida**
+
+⚠️ **IMPORTANTE**: La API Key es como una contraseña, no la compartas con nadie.
+
+## 📋 Ejemplo de archivo de entrada
+
+Tu archivo Excel debe verse así:
+
+| Company Name | Website |
+|--------------|---------|
+| ProColombia | https://procolombia.co |
+| Bancolombia | https://www.bancolombia.com |
+| Avianca | https://www.avianca.com |
+| Ecopetrol | https://www.ecopetrol.com.co |
+
+## 🎯 ¿Cómo funciona internamente? (Explicación simple)
+
+### Paso 1: Preparación 📋
+- Lee tu archivo Excel con la lista de empresas
+- Verifica que las páginas web sean accesibles
+
+### Paso 2: Navegación web 🌐
+- Abre cada página web como si fuera una persona con un navegador
+- Espera a que cargue completamente (incluso contenido dinámico)
+- Busca secciones importantes: "Acerca de", "Contacto", "Servicios", etc.
+
+### Paso 3: Análisis inteligente 🤖
+- Envía el contenido de la página a Google AI (Gemini)
+- La IA "lee" y "entiende" el texto como lo haría una persona
+- Extrae la información específica que necesitas
+
+### Paso 4: Organización 📊
+- Guarda toda la información en un formato ordenado
+- Crea un archivo CSV que puedes abrir con Excel
+- Mantiene un registro de qué empresas ya procesó (para no repetir trabajo)
+
+## ⚡ Configuración y rendimiento
+
+### ⏱️ ¿Cuánto tiempo toma?
+- **Por empresa**: 30-60 segundos
+- **50 empresas**: 30-50 minutos aproximadamente
+- **Depende de**: velocidad de internet, complejidad de las páginas web
+
+### 🔧 Configuraciones que puedes cambiar:
 ```python
-# Durante el taller, se te pedirá ingresar tu API key
-# Alternativamente, puedes configurar la variable de entorno:
-export GOOGLE_AI_API_KEY="tu-api-key-aqui"
+MAX_CONCURRENT_COMPANIES = 5    # Cuántas empresas procesar al mismo tiempo
+GPT_RATE_LIMIT_DELAY = 1.0      # Pausa entre consultas a la IA (en segundos)
+URL_VALIDATION_TIMEOUT = 10     # Tiempo máximo para verificar si una página funciona
 ```
 
-## 📊 Datos de Entrada
+## 🚨 Problemas comunes y soluciones
 
-El sistema procesa un archivo Excel con las siguientes columnas:
-- `Company Name`: Nombre de la empresa
-- `Website`: URL del sitio web
+### "No encuentro mi API Key" 🔑
+- **Solución**: Ve a https://makersuite.google.com/app/apikey y créala de nuevo
+- Asegúrate de copiar todo el texto sin espacios extra
 
-### Ejemplo de datos:
-```
-Company Name         | Website
-ProColombia         | https://procolombia.co
-Bancolombia         | https://www.bancolombia.com
-Avianca             | https://www.avianca.com
-```
+### "El programa se detiene con errores" ⚠️
+- **Solución**: Es normal que algunos sitios web no funcionen
+- El programa automáticamente salta esos sitios y continúa con los demás
+- Revisa el archivo de log para ver qué pasó
 
-## 📈 Datos de Salida
+### "Los resultados no están completos" 📊
+- **Solución**: Algunas empresas no publican toda su información en la web
+- El programa marca "No Information" cuando no encuentra datos
+- Es normal y no es un error
 
-El sistema extrae la siguiente información de cada empresa:
-- **hq_city**: Ciudad de la sede
-- **hq_state**: Estado/provincia de la sede
-- **company_description**: Descripción breve de la empresa
-- **sector**: Sector industrial
-- **presence_in_latam**: Presencia en Latinoamérica
-- **sustainability_reports**: Reportes de sostenibilidad
-- **contact_phone**: Teléfonos de contacto
+### "Va muy lento" 🐌
+- **Solución**: Es normal, el programa es cuidadoso para no saturar las páginas web
+- **NO cambies** las configuraciones de tiempo para ir más rápido (puede causar bloqueos)
 
-## 🎭 Características Técnicas
+## 📈 ¿Qué hacer con los resultados?
 
-### Web Scraping Avanzado
-- **Renderizado JavaScript** con Playwright
-- **Manejo de contenido dinámico** y lazy loading
-- **Extracción inteligente** de enlaces relevantes
-- **Gestión de errores** y reintentos automáticos
+Una vez que termine, tendrás un archivo CSV con toda la información. Puedes:
 
-### Análisis con IA
-- **Prompts optimizados** para extracción de datos empresariales con Google Gemini
-- **Caché inteligente** para evitar llamadas repetidas a la API
-- **Normalización automática** de respuestas
-- **Rate limiting** para cumplir con límites de API
+1. **📊 Abrirlo en Excel** para analizarlo
+2. **📈 Crear gráficos** para visualizar patrones
+3. **🔍 Filtrar empresas** por sector, ubicación, etc.
+4. **📧 Usar los datos de contacto** para outreach comercial
+5. **📋 Crear reportes** para presentaciones
 
-### Optimización de Performance
-- **Procesamiento secuencial** para mayor estabilidad
-- **Sistema de checkpoints** para recuperación de errores
-- **Validación de URLs** antes del procesamiento
-- **Gestión de sitios bloqueados**
+## ⚖️ Consideraciones éticas y legales
 
-## 📝 Flujo de Trabajo
+### ✅ Uso responsable:
+- **Respeta** los términos de servicio de las páginas web
+- **No hagas** muchas consultas seguidas al mismo sitio
+- **Usa** la información de forma ética y legal
+- **Verifica** la información importante manualmente
 
-1. **Configuración**: Instalación de dependencias y configuración de API
-2. **Carga de datos**: Lectura del archivo Excel con empresas
-3. **Validación**: Verificación de accesibilidad de sitios web
-4. **Scraping**: Descarga de HTML con renderizado JavaScript
-5. **Análisis**: Extracción de información con Google Gemini
-6. **Exportación**: Guardado de resultados en CSV
-7. **Visualización**: Análisis y gráficos de los datos obtenidos
+### ❌ NO hagas:
+- Extraer información personal o confidencial
+- Usar los datos para spam o actividades ilegales
+- Ignorar las políticas de robots.txt de los sitios web
+- Hacer muchas consultas simultáneas (puede parecer un ataque)
 
-## ⚡ Performance y Escalabilidad
+## 🆘 ¿Necesitas ayuda?
 
-### Configuraciones Recomendadas
-- **Procesamiento**: Secuencial (una empresa a la vez)
-- **Timeout de URLs**: 15 segundos
-- **Rate limit Gemini**: 2 segundos entre llamadas
-- **Secciones por empresa**: Máximo 3 secciones adicionales
+### Si algo no funciona:
+1. **📋 Revisa** que tu archivo Excel tenga las columnas correctas
+2. **🔑 Verifica** que tu API Key sea válida
+3. **🌐 Confirma** que tengas internet estable
+4. **📝 Revisa** los mensajes que aparecen en pantalla
 
-### Optimizaciones Implementadas
-- Caché de respuestas Gemini
-- Reutilización de HTMLs descargados
-- Validación previa de URLs
-- Manejo inteligente de errores
+### Archivos de log:
+El programa guarda registros detallados en:
+- `data/htmls/processing.log` - Registro completo de lo que hace
+- `data/htmls/blocked_sites.json` - Sitios que no pudieron procesarse
 
-## 🔧 Personalización
+## 🎓 ¿Quieres aprender más?
 
-### Modificar Keywords de Búsqueda
-```python
-KEYWORDS = [
-    'contact', 'about', 'team', 'services',
-    'contacto', 'acerca', 'equipo', 'servicios'
-    # Agregar más keywords según necesidades
-]
-```
+Este proyecto combina varias tecnologías modernas:
+- **Web Scraping**: Extraer información de páginas web
+- **Inteligencia Artificial**: Google Gemini para análisis de texto
+- **Automatización**: Python para orquestar todo el proceso
+- **Análisis de datos**: Pandas para organizar la información
 
-### Ajustar Prompt de Gemini
-```python
-def build_prompt(text):
-    return f"""
-    Personaliza aquí el prompt según tus necesidades específicas...
-    {text}
-    """
-```
+## � Contacto y soporte
 
-## 🐛 Solución de Problemas
-
-### Errores Comunes
-1. **API Key inválida**: Verificar configuración de Google AI
-2. **Timeout de navegador**: Aumentar timeout en configuración
-3. **Sitios bloqueados**: Revisar user-agent y headers
-4. **Memoria insuficiente**: Reducir número de secciones por empresa
-
-### Logs y Debugging
-Los logs se muestran en tiempo real durante la ejecución e incluyen:
-- Estado de descarga de cada empresa
-- Errores de conexión y timeout
-- Estadísticas de caché y performance
-- Resultados de extracción por empresa
-
-## 📚 Recursos Adicionales
-
-- [Google AI Studio](https://makersuite.google.com/)
-- [Gemini API Documentation](https://ai.google.dev/docs)
-- [Playwright Python](https://playwright.dev/python/)
-- [BeautifulSoup Documentation](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
-- [MyBinder Documentation](https://mybinder.readthedocs.io/)
-
-## 🤝 Contribuir
-
-¿Mejoras o sugerencias? ¡Contribuciones bienvenidas!
-
-1. Fork el repositorio
-2. Crea una rama para tu feature
-3. Commit tus cambios
-4. Push a la rama
-5. Abre un Pull Request
-
-## � Troubleshooting
-
-### Problemas con Playwright en MyBinder
-
-Si encuentras errores relacionados con "Host system is missing dependencies":
-
-1. **Espera a que la construcción termine completamente** - MyBinder instala automáticamente las dependencias
-2. **Ejecuta el test de verificación**:
-   ```bash
-   cd notebooks
-   python test_playwright.py
-   ```
-3. **Si el problema persiste**, es probable que MyBinder esté teniendo problemas temporales
-
-### Errores Comunes
-
-- **"No such file or directory"**: Asegúrate de estar en el directorio `notebooks`
-- **"API key invalid"**: Configura tu propia API key de Gemini
-- **"Browser launch failed"**: Ejecuta `python test_playwright.py` para diagnosticar
-
-### 📞 Soporte
-
-Si encuentras problemas:
-
-1. Revisa los logs en `../data/htmls/processing.log`
-2. Verifica tu conectividad a Internet
-3. Confirma que tu API key de Gemini sea válida
-4. Usa `--clear-blocked` si muchos sitios están bloqueados
-
-## �📄 Licencia
-
-Este proyecto está bajo la Licencia MIT - ver el archivo LICENSE para detalles.
-
-## 👨‍💻 Autor
-
-Desarrollado para el Workshop de IA Empresarial - ProColombia 2025
+- **📧 Problemas técnicos**: Revisa la sección de troubleshooting arriba
+- **💡 Sugerencias**: Abre un "Issue" en GitHub
+- **🤝 Colaborar**: Haz un "Pull Request" con mejoras
 
 ---
 
-**🎉 ¡Disfruta aprendiendo sobre extracción automatizada de datos empresariales!**
+## 🎉 ¡Listo para empezar!
+
+**Recuerda**: Este es un programa poderoso pero requiere paciencia. La automatización inteligente toma tiempo, pero te ahorrará horas de trabajo manual.
+
+**🚀 Haz clic en "launch binder" arriba para comenzar tu primera extracción automatizada de datos empresariales!**
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT - Puedes usarlo libremente para fines educativos y comerciales.
+
+## �‍💻 Creado por
+
+Desarrollado para el Workshop de IA Empresarial - ProColombia 2025
+
+**🔥 ¡Automatiza tu investigación empresarial y ahorra tiempo valioso!**

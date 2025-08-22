@@ -1,31 +1,50 @@
-# Dependencias principales para el script
-google-generativeai>=0.3.0
-pandas>=1.5.0
-beautifulsoup4>=4.11.0
+# ===== DEPENDENCIAS PRINCIPALES PARA EXTRACCIÓN DE DATOS EMPRESARIALES =====
+
+# Inteligencia Artificial - Google Gemini
+google-generativeai>=0.8.0
+
+# Manipulación de datos y archivos Excel
+pandas>=2.0.0
+openpyxl>=3.1.0
+
+# Web scraping y parsing HTML
+beautifulsoup4>=4.12.0
 lxml>=4.9.0
-openpyxl>=3.0.0
 
-# Web scraping y navegador automatizado
-playwright>=1.30.0
-aiohttp>=3.8.0
+# Navegador automatizado para renderizado JavaScript
+playwright>=1.40.0
 
-# Utilidades de red y HTTP
-requests>=2.28.0
-urllib3>=1.26.0
+# Cliente HTTP asíncrono para validación de URLs
+aiohttp>=3.9.0
 
-# Notebook y visualización
+# Cliente HTTP tradicional (backup)
+requests>=2.31.0
+urllib3>=2.0.0
+
+# ===== UTILIDADES DE PROCESAMIENTO =====
+
+# Expresiones regulares avanzadas
+regex>=2023.12.0
+
+# Variables de entorno
+python-dotenv>=1.0.0
+
+# ===== ANÁLISIS Y VISUALIZACIÓN (OPCIONAL) =====
+
+# Jupyter Notebooks
 jupyter>=1.0.0
-ipywidgets>=8.0.0
-matplotlib>=3.5.0
-seaborn>=0.11.0
-plotly>=5.0.0
+ipywidgets>=8.1.0
 
-# Procesamiento de texto y expresiones regulares
-regex>=2022.0.0
+# Gráficos y visualización
+matplotlib>=3.8.0
+seaborn>=0.13.0
+plotly>=5.17.0
 
-# Sistema y configuración
-python-dotenv>=0.19.0
-
-# Dependencias estándar de Python (ya incluidas pero útil documentar)
-# os, re, json, time, asyncio, hashlib, logging, datetime, getpass, concurrent.futures
-# urllib.parse - son parte de la biblioteca estándar de Python
+# ===== NOTAS IMPORTANTES =====
+# - Versión de Python requerida: 3.10+ (ver runtime.txt)
+# - Después de instalar, ejecutar: python -m playwright install chromium
+# - Las siguientes librerías son parte de Python estándar (no requieren instalación):
+#   * os, re, json, time, asyncio, hashlib, logging, datetime
+#   * getpass, concurrent.futures, urllib.parse
+# - Para usar en Binder: Todas las dependencias se instalan automáticamente
+# - Para uso local: pip install -r requirements.txt
