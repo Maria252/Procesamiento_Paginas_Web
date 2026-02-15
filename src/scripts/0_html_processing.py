@@ -593,6 +593,19 @@ def normalize_gpt_response(data):
     # but it just calls the new function.
     return normalize_response(data)
 
+async def save_result_to_csv(result_data):
+    """Guardar resultado individual al CSV de forma thread-safe"""
+    try:
+        out_df = pd.DataFrame([result_data])
+        # Verificar si el archivo existe para determinar si escribir headers
+        header_needed = not os.path.exists(OUTPUT_FILE) or os.path.getsize(OUTPUT_FILE) == 0
+        out_df.to_csv(OUTPUT_FILE, mode='a', index=False, header=header_needed, encoding='utf-8')
+        logger.info(f"    ✓ Guardado al CSV: {result_data['company_name']}")
+        return True
+    except Exception as e:
+        logger.error(f"    ✗ Error guardando CSV para {result_data.get('company_name', 'desconocida')}: {e}")
+        return False
+
 async def process_single_company(idx, row, total, blocked_sites, gpt_cache):
     """Procesar una sola empresa de manera asíncrona"""
     company = row.get('Company Name', f"empresa_{idx}")
@@ -697,7 +710,6 @@ async def main():
 
     df = pd.read_excel(INPUT_CSV)
     total = len(df)
-    header_written = os.path.exists(OUTPUT_FILE)
     
     # Revisar sitios bloqueados
     if blocked_sites:
@@ -790,14 +802,14 @@ async def main():
                 result_data, url = result
                 processed.add(url)
                 
-                # Guardar resultado
-                out_df = pd.DataFrame([result_data])
-                out_df.to_csv(OUTPUT_FILE, mode='a', index=False, header=not header_written)
-                header_written = True
-                successful_count += 1
+                # Guardar resultado al CSV INMEDIATAMENTE
+                if await save_result_to_csv(result_data):
+                    successful_count += 1
+                else:
+                    failed_count += 1
                 
             except Exception as e:
-                logger.error(f"Error guardando resultado: {e}")
+                logger.error(f"Error procesando resultado: {e}")
                 failed_count += 1
         
         # Guardar progreso después de cada lote
