@@ -1,5 +1,7 @@
-# Only track src and this file
+# Only track src, binder, and this file
 /*
 !/src/
 !/src/**
+!/binder/
+!/binder/**
 !.gitignore
