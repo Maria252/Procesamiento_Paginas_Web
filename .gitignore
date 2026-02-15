@@ -5,3 +5,5 @@
 !/binder/
 !/binder/**
 !.gitignore
+docs/
+presentations/
