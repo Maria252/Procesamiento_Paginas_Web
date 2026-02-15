@@ -23,5 +23,6 @@ apt-get install -y --no-install-recommends \
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 
-# Instalar Playwright browsers después de que se instalen las dependencias de Python
+# Instalar Playwright después de que se instalen las dependencias de Python
+python -m pip install --no-cache-dir playwright
 python -m playwright install chromium
