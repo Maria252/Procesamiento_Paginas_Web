@@ -1,5 +1,13 @@
 #!/bin/bash
 
-# Instalar Playwright despues de que se instalen las dependencias de Python
-python -m pip install --no-cache-dir playwright
+# Instalar dependencias de Python desde requirements.txt
+# (ya incluye playwright)
+
+# Instalar navegador Chromium para Playwright
 python -m playwright install chromium
+
+# Crear directorios necesarios si no existen
+mkdir -p src/data/htmls
+mkdir -p src/data/processed
+
+echo "✅ Todas las dependencias instaladas correctamente"
