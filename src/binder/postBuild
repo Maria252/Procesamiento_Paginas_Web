@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Instalar dependencias del sistema necesarias para Playwright
+apt-get update
+apt-get install -y wget gnupg
+
+# Instalar Playwright browsers después de que se instalen las dependencias de Python
+python -m playwright install chromium
+python -m playwright install-deps chromium

@@ -1,0 +1,5 @@
+# Only track src and this file
+/*
+!/src/
+!/src/**
+!.gitignore

@@ -1,0 +1,92 @@
+2026-02-15 05:18:16,912 - INFO - Iniciando procesamiento de empresas
+2026-02-15 05:18:17,274 - INFO - Total empresas: 1898
+2026-02-15 05:18:17,274 - INFO - Empresas con HTMLs existentes: 0
+2026-02-15 05:18:17,274 - INFO - Empresas completamente procesadas: 0
+2026-02-15 05:18:17,274 - INFO - Empresas bloqueadas: 0
+2026-02-15 05:18:17,274 - INFO - Empresas por procesar: 1898
+2026-02-15 05:18:17,274 - INFO - Procesando lote 1 de 380
+2026-02-15 05:18:17,670 - INFO - [5/1898] Descargando HTMLs de 21212: https://www.21212.com/
+2026-02-15 05:18:18,259 - INFO - [3/1898] Descargando HTMLs de 1414 Ventures: https://www.1414ventures.com/
+2026-02-15 05:18:18,259 - INFO - [4/1898] Descargando HTMLs de 2048 Ventures: https://www.2048.vc/
+2026-02-15 05:18:18,417 - INFO - [2/1898] Descargando HTMLs de 10Pearls: https://www.10pearls.com/
+2026-02-15 05:18:18,994 - WARNING - [1/1898] 10H Capital: URL no accesible después de validación completa, agregando a sitios bloqueados
+2026-02-15 05:18:38,966 - INFO -     HTML renderizado obtenido para https://www.21212.com/ (intento 1)
+2026-02-15 05:18:38,975 - INFO -     Secciones relevantes encontradas: 1
+2026-02-15 05:18:41,282 - INFO -     HTML renderizado obtenido para https://www.1414ventures.com/ (intento 1)
+2026-02-15 05:18:41,384 - INFO -     Secciones relevantes encontradas: 5
+2026-02-15 05:18:43,601 - INFO -     HTML renderizado obtenido para https://www.2048.vc/ (intento 1)
+2026-02-15 05:18:43,616 - INFO -     Secciones relevantes encontradas: 5
+2026-02-15 05:18:47,512 - INFO -     Descargado: https://www.21212.com/about/ -> 21212_about.html
+2026-02-15 05:18:49,577 - INFO - --- Extrayendo y analizando para 21212 ---
+2026-02-15 05:18:51,745 - ERROR - Error en Gemini: 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2026-02-15 05:18:51,746 - INFO - -> Procesado exitosamente 21212
+2026-02-15 05:18:53,866 - INFO -     Descargado: https://www.2048.vc/team -> 2048_Ventures_team.html
+2026-02-15 05:18:54,834 - INFO -     HTML renderizado obtenido para https://www.10pearls.com/ (intento 1)
+2026-02-15 05:18:54,888 - INFO -     Secciones relevantes encontradas: 8
+2026-02-15 05:18:56,303 - INFO -     Descargado: https://www.2048.vc/blog/our-thesis-on-drones -> 2048_Ventures_blog_our-thesis-on-drones.html
+2026-02-15 05:18:56,303 - INFO -     Descargado: https://www.2048.vc/blog/our-thesis-on-video-as-a-system-of-record -> 2048_Ventures_blog_our-thesis-on-video-as-a-system-of-record.html
+2026-02-15 05:18:56,303 - INFO -     Descargado: https://www.2048.vc/companies -> 2048_Ventures_companies.html
+2026-02-15 05:18:56,313 - INFO -     Descargado: https://www.2048.vc/blog/2048-vc-blog-fellows26 -> 2048_Ventures_blog_2048-vc-blog-fellows26.html
+2026-02-15 05:18:58,388 - INFO - --- Extrayendo y analizando para 2048 Ventures ---
+2026-02-15 05:19:01,475 - ERROR - Error en Gemini: 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2026-02-15 05:19:01,476 - INFO - -> Procesado exitosamente 2048 Ventures
+2026-02-15 05:19:03,649 - ERROR -     Error descargando https://www.1414ventures.com/about: Page.goto: Timeout 20000ms exceeded.
+Call log:
+  - navigating to "https://www.1414ventures.com/about", waiting until "networkidle"
+
+2026-02-15 05:19:04,109 - ERROR -     Error descargando https://www.1414ventures.com/portfolio: Page.goto: Timeout 20000ms exceeded.
+Call log:
+  - navigating to "https://www.1414ventures.com/portfolio", waiting until "networkidle"
+
+2026-02-15 05:19:04,647 - ERROR -     Error descargando https://www.1414ventures.com/team-1: Page.goto: Timeout 20000ms exceeded.
+Call log:
+  - navigating to "https://www.1414ventures.com/team-1", waiting until "networkidle"
+
+2026-02-15 05:19:05,207 - ERROR -     Error descargando https://www.1414ventures.com/contact: Page.goto: Timeout 20000ms exceeded.
+Call log:
+  - navigating to "https://www.1414ventures.com/contact", waiting until "networkidle"
+
+2026-02-15 05:19:05,732 - ERROR -     Error descargando https://www.1414ventures.com/copy-of-marketscape: Page.goto: Timeout 20000ms exceeded.
+Call log:
+  - navigating to "https://www.1414ventures.com/copy-of-marketscape", waiting until "networkidle"
+
+2026-02-15 05:19:06,746 - INFO -     Descargado: https://www.10pearls.com/undefined -> 10Pearls_undefined.html
+2026-02-15 05:19:07,860 - INFO - --- Extrayendo y analizando para 1414 Ventures ---
+2026-02-15 05:19:11,234 - ERROR - Error en Gemini: 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2026-02-15 05:19:11,235 - INFO - -> Procesado exitosamente 1414 Ventures
+2026-02-15 05:20:30,795 - INFO - Iniciando procesamiento de empresas
+2026-02-15 05:20:31,055 - INFO - Total empresas: 1898
+2026-02-15 05:20:31,055 - INFO - Empresas con HTMLs existentes: 4
+2026-02-15 05:20:31,055 - INFO - Empresas completamente procesadas: 0
+2026-02-15 05:20:31,055 - INFO - Empresas bloqueadas: 0
+2026-02-15 05:20:31,055 - INFO - Empresas por procesar: 1898
+2026-02-15 05:20:31,055 - INFO - Procesando lote 1 de 380
+2026-02-15 05:20:31,283 - INFO - [3/1898] 1414 Ventures: HTMLs ya descargados, extrayendo datos...
+2026-02-15 05:20:31,283 - INFO - --- Extrayendo y analizando para 1414 Ventures ---
+2026-02-15 05:20:34,234 - INFO - Respuesta de Gemini obtenida y guardada en caché
+2026-02-15 05:20:34,234 - INFO - -> Procesado exitosamente 1414 Ventures
+2026-02-15 05:20:34,249 - INFO - [5/1898] 21212: HTMLs ya descargados, extrayendo datos...
+2026-02-15 05:20:34,250 - INFO - --- Extrayendo y analizando para 21212 ---
+2026-02-15 05:20:36,788 - INFO - Respuesta de Gemini obtenida y guardada en caché
+2026-02-15 05:20:36,788 - INFO - -> Procesado exitosamente 21212
+2026-02-15 05:20:36,788 - INFO - [4/1898] 2048 Ventures: HTMLs ya descargados, extrayendo datos...
+2026-02-15 05:20:36,788 - INFO - --- Extrayendo y analizando para 2048 Ventures ---
+2026-02-15 05:20:39,452 - INFO - Respuesta de Gemini obtenida y guardada en caché
+2026-02-15 05:20:39,452 - INFO - -> Procesado exitosamente 2048 Ventures
+2026-02-15 05:20:39,452 - INFO - [2/1898] 10Pearls: HTMLs ya descargados, extrayendo datos...
+2026-02-15 05:20:39,452 - INFO - --- Extrayendo y analizando para 10Pearls ---
+2026-02-15 05:20:41,895 - INFO - Respuesta de Gemini obtenida y guardada en caché
+2026-02-15 05:20:41,895 - INFO - -> Procesado exitosamente 10Pearls
+2026-02-15 05:20:42,492 - WARNING - [1/1898] 10H Capital: URL no accesible después de validación completa, agregando a sitios bloqueados
+2026-02-15 05:20:44,529 - INFO - Procesando lote 2 de 380
+2026-02-15 05:20:44,621 - WARNING - [9/1898] 777 Partners: URL no accesible después de validación completa, agregando a sitios bloqueados
+2026-02-15 05:20:44,713 - WARNING - [7/1898] 3i Group (LON: III): URL no accesible después de validación completa, agregando a sitios bloqueados
+2026-02-15 05:20:44,825 - INFO - [6/1898] Descargando HTMLs de 23 & Park: https://www.23park.com/
+2026-02-15 05:20:45,251 - INFO - [10/1898] Descargando HTMLs de AAK (STO: AAK): https://www.aak.com/
+2026-02-15 05:20:45,768 - WARNING - [8/1898] 75 & Sunny: URL no accesible después de validación completa, agregando a sitios bloqueados
+2026-02-15 05:21:07,142 - ERROR - Error intento 1 para https://www.23park.com/: Page.goto: Timeout 20000ms exceeded.
+Call log:
+  - navigating to "https://www.23park.com/", waiting until "networkidle"
+
+2026-02-15 05:21:10,344 - INFO -     HTML renderizado obtenido para https://www.aak.com/ (intento 1)
+2026-02-15 05:21:10,403 - INFO -     Secciones relevantes encontradas: 8
